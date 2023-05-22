@@ -4,14 +4,40 @@ import { push } from "connected-react-router";
 import * as actions from "../../store/actions";
 import './Login.scss';
 import { FormattedMessage } from 'react-intl';
-import { divide } from 'lodash';
+import { handleLoginApi } from '../../services/userService';
 
 
 
 class Login extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            username: '',
+            password: '',
+            
+        };
     }
+    handleOnChangeUsername = (event) => {
+        this.setState({
+            username: event.target.value,
+        })
+    }
+
+handleOnChangePassword = (event) => {
+    this.setState({
+        password: event.target.value,
+    })
+}
+handleLogin = async () => {
+    console.log(this.state.username)
+    console.log(this.state.password)
+    try {
+        await handleLoginApi(this.state.username, this.state.password);
+    } catch (e) {
+        console.log(e);
+    }
+    
+}
     render() {
         return (
             <div className='login-background'>
@@ -20,14 +46,26 @@ class Login extends Component {
                         <div className='col-12 text-login'>Login</div>
                         <div className='col-12 form-group login-input'>
                             <label>Username:</label>
-                            <input type='text' className='form-control' placeholder='Enter your username' />
+                            <input type='text'
+                             className='form-control'
+                             placeholder='Enter your username' 
+                             value={this.state.username}
+                             onChange={(event) => {
+                                this.handleOnChangeUsername(event);
+                            }}/>
                         </div>
                         <div className='col-12 form-group login-input'>
                             <label>Password:</label>
-                            <input type='password' className='form-control' placeholder='Enter your password' />
+                            <input type='password'
+                             className='form-control'
+                             placeholder='Enter your password'
+                             onChange={(event) => {
+                                this.handleOnChangePassword(event)
+                             }} />
+
                         </div>
                         <div className='col-12'>
-                            <button className='btn-login'>Login</button>
+                            <button className='btn-login' onClick={() => {this.handleLogin()}}>Login</button>
                         </div>
                         <div className='col-12'>
                             <span className='forgot-password'>Forgot your password?</span>
